@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Magehouse_Slider>
+      <active>true</active>
+      <codePool>community</codePool>
+      <version>0.1.0</version>
+    </Magehouse_Slider>
+  </modules>
+</config>

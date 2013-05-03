@@ -1,0 +1,101 @@
+<script type="text/javascript">
+	var data = "";
+	var active = false;
+	jQuery(function($){
+		if($('body').find('#resultLoading').attr('id') != 'resultLoading'){
+		$('.main').append('<div id="resultLoading" style="display:none"><div><img src="<?php echo $this->loadingImage ?>"><div><?php echo $this->loadingText ?></div></div><div class="bg"></div></div>');}
+		var height = $('.main').outerHeight();
+		var width = $('.main').outerWidth();
+		$('.ui-slider-handle').css('cursor','pointer');
+		
+		$('#resultLoading').css({
+			'width':width,
+			'height':'100%',
+			'position':'absolute',
+			'z-index':'10000000',
+			'top':'0',
+			'left':'0'
+		});	
+		$('#resultLoading .bg').css({
+			'background':'<?php echo $this->overlayColor; ?>',
+			'opacity':'<?php echo $this->overlayOpacity ?>',
+			'width':'100%',
+			'height':'100%',
+			'position':'absolute',
+			'top':'0'
+		});
+		$('#resultLoading>div:first').css({
+			'width': '100%',
+			'text-align': 'center',
+			'position': 'absolute',
+			'left': '0',
+			'margin-top': '22em',
+			'font-size':'16px',
+			'z-index':'10',
+			'color':'<?php echo $this->loadingTextColor ?>'
+			
+		});
+		
+		<?php if($this->ajaxLayered): ?>
+		var _0x34ae=["\x63\x6C\x69\x63\x6B","\x68\x72\x65\x66","\x61\x74\x74\x72","\x70\x72\x65\x76\x65\x6E\x74\x44\x65\x66\x61\x75\x6C\x74","\x6C\x69\x76\x65","\x2E\x62\x6C\x6F\x63\x6B\x2D\x6C\x61\x79\x65\x72\x65\x64\x2D\x6E\x61\x76\x20\x61"];$(_0x34ae[5])[_0x34ae[4]](_0x34ae[0],function (_0x1f55x1){var _0x1f55x2=$(this)[_0x34ae[2]](_0x34ae[1]);sliderAjax(_0x1f55x2);_0x1f55x1[_0x34ae[3]]();} );	
+		<?php endif; ?>
+		
+		
+		<?php if($this->ajaxToolbar): ?>
+		eval(function(p,a,c,k,e,d){while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+c.toString(a)+'\\b','g'),k[c])}}return p}('$(\'.1 a\').3(\'9\',5(e){6 0=$(8).c(\'b\');7(0);e.2()});$(\'.1 4\').d(\'g\');$(\'.1 4\').3(\'f\',5(){6 0=$(8).h();7(0);e.2()})',18,18,'url|toolbar|preventDefault|live|select|function|var|sliderAjax|this|click||href|attr|removeAttr||change|onchange|val'.split('|')))
+		<?php endif; ?>
+		
+		
+	});
+
+<?php if($this->ajaxSlider || $this->ajaxLayered): ?>
+/*DONOT EDIT THIS CODE*/
+function sliderAjax(url) {
+    if (!active) {
+        active = true;
+        jQuery(function($) {
+            oldUrl = url;
+            $('#resultLoading .bg').height('100%');
+            $('#resultLoading').fadeIn(300);
+            try {
+                $('body').css('cursor', 'wait');
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    type: 'post',
+                    data: data,
+                    success: function(data) {
+						callback();
+                        if (data.viewpanel) {
+                            if ($('.block-layered-nav')) {
+                                $('.block-layered-nav').empty();
+                                $('.block-layered-nav').append(data.viewpanel)
+                            }
+                        }
+                        if (data.productlist) {
+                            $('.category-products').empty();
+                            $('.category-products').append(data.productlist)
+                        }
+                        var hist = url.split('?');
+                        if(window.history && window.history.pushState){
+							window.history.pushState('GET', data.title, url);
+						}
+                        $('body').find('.toolbar select').removeAttr('onchange');
+                        $('#resultLoading .bg').height('100%');
+                        $('#resultLoading').fadeOut(300);
+                        $('body').css('cursor', 'default')
+                    }
+                })
+            } catch (e) {}
+        });
+        active = false
+    }
+    return false
+}
+<?php endif; ?> 
+
+function callback(){
+	<?php echo $this->getCallbackJs(); ?>	
+}
+</script>
+
